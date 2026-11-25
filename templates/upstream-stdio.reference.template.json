@@ -1,0 +1,14 @@
+{
+  "_comment": "Reference only. This is the stdio process the local gateway starts on YOUR computer. It is not a Grok Bot local-command connector. The gateway passes FIGMA_WS_PORT=18211 and does not pass FIGMA_ACCESS_TOKEN or the gateway bearer token. Run only one backend.",
+  "mcpServers": {
+    "figma-unified-mcp": {
+      "command": "node",
+      "args": [
+        "/PATH/TO/figma-unified-mcp/dist/server.js"
+      ],
+      "env": {
+        "FIGMA_WS_PORT": "18211"
+      }
+    }
+  }
+}

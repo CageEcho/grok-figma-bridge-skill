@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<title>安装示意图</title>
+<style>
+  html, body { margin: 0; width: 1280px; height: 860px; background: #eef2f6; color: #172033; font-family: "WenQuanYi Micro Hei", "Segoe UI", sans-serif; }
+  .card { margin: 28px; height: 804px; background: #fff; border-radius: 22px; box-shadow: 0 10px 30px rgba(23, 32, 51, .06); padding: 26px 30px 16px; box-sizing: border-box; }
+  .top { display: flex; justify-content: space-between; gap: 16px; }
+  h1 { font-size: 28px; margin: 0 0 6px; }
+  .badge { background: #fff4df; color: #8a5a00; border-radius: 999px; padding: 8px 12px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+  .sub { margin: 0; color: #526072; font-size: 16px; }
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 20px; }
+  .step { background: #f6f8fb; border-radius: 16px; padding: 14px; min-height: 246px; box-sizing: border-box; }
+  .num { width: 28px; height: 28px; border-radius: 50%; background: #172033; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 8px; }
+  h2 { font-size: 16px; margin: 0 0 8px; }
+  p { margin: 0; font-size: 14.5px; line-height: 1.5; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+  .note { border-radius: 14px; padding: 14px 16px; font-size: 15px; line-height: 1.5; }
+  .ok { background: #e8f7ee; } .stop { background: #fff1f1; }
+  .note strong { display: block; margin-bottom: 4px; }
+  .foot { display: flex; justify-content: space-between; margin-top: 14px; color: #6b7787; font-size: 12px; }
+  code { font-family: ui-monospace, monospace; font-size: .92em; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="top">
+      <div>
+        <h1>在你自己的电脑上的最短安装</h1>
+        <p class="sub">流程示意图，不是截图。尚未在干净的同事电脑上做端到端测试。</p>
+      </div>
+      <div class="badge">流程示意图 · 不是截图</div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h2>固定版本并打补丁</h2><p><code>fetch-upstream.mjs</code> 检出指定提交，核对已知的 WebSocket 那一行，加上 <code>127.0.0.1</code>。版本对不上就失败，不会继续构建。</p></div>
+      <div class="step"><div class="num">2</div><h2>私密 token 文件</h2><p><code>setup.mjs</code> 写入权限 0600 的设置，并且不打印 bearer token。只启动一个网关，由它持有 stdio 后端。</p></div>
+      <div class="step"><div class="num">3</div><h2>私有 HTTPS</h2><p><code>tailscale serve</code> 只反代到 <code>127.0.0.1</code>。不要开 Funnel。在 Grok Bot 里先认证 Tailscale，再添加远程 HTTP 连接器。</p></div>
+      <div class="step"><div class="num">4</div><h2>打开面板</h2><p>用 Figma Desktop，不要用浏览器。导入 <code>figma-plugin/manifest.json</code>。让 <code>figma-unified-mcp</code> 保持绿色 Connected。</p></div>
+      <div class="step"><div class="num">5</div><h2>只测空白文件</h2><p>先看状态，做一次读取。只有你明确同意时才创建一个临时节点，然后删除。不要从正式设计文件开始。</p></div>
+    </div>
+    <div class="row">
+      <div class="note ok"><strong>运行规则</strong>18211 端口只能有一个后端。端口被占用时，网关会打印那个 PID 并退出。它不会做宽泛的 kill。面板和文件开着时，可以切换到其他应用。</div>
+      <div class="note stop"><strong>停止条件</strong>不要用 Bot 本机命令连接器，不要开 Tailscale Funnel，不要用 Figma 网页版，也不要在聊天里发送 Figma REST token。权限错误或面板断开时停止操作。</div>
+    </div>
+    <div class="foot"><span>网关测试使用模拟子进程，不会调用 Figma。</span><span>Grok Figma Bridge Skill · 示意图</span></div>
+  </div>
+</body>
+</html>

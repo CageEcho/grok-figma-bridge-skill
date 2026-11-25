@@ -1,0 +1,9 @@
+{
+  "_comment": "Reference only. Replace the host with the MagicDNS name from `tailscale status` on your computer. Put the bearer token in the Authorization header through the client's credential field. Do not paste the token into chat. transport http matches the verified Grok Bot connector shape. AddMcpServer's documented fields are name, url, and optional headers. Do not use a local command connector: that command runs on Grok Bot's computer.",
+  "name": "figma-local-private",
+  "transport": "http",
+  "url": "https://YOUR_DEVICE.YOUR_TAILNET.ts.net/mcp",
+  "headers": {
+    "Authorization": "Bearer <TOKEN_FROM_LOCAL_MODE_0600_FILE>"
+  }
+}

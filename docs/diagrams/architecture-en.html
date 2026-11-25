@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Architecture diagram</title>
+<style>
+  html, body { margin: 0; width: 1280px; height: 900px; background: #eef2f6; color: #172033; font-family: "Segoe UI", "Helvetica Neue", sans-serif; }
+  .card { margin: 28px; height: 844px; background: #fff; border-radius: 22px; box-shadow: 0 10px 30px rgba(23, 32, 51, .06); padding: 28px 32px 18px; box-sizing: border-box; }
+  .top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+  h1 { font-size: 28px; line-height: 1.25; margin: 0 0 8px; letter-spacing: -.02em; }
+  .badge { background: #fff4df; color: #8a5a00; border-radius: 999px; padding: 8px 12px; font-size: 13px; font-weight: 650; white-space: nowrap; }
+  .sub { margin: 0; color: #526072; font-size: 16px; max-width: 820px; }
+  .flow { display: grid; grid-template-columns: 1fr 70px 1fr 70px 1fr 70px 1fr; gap: 8px; align-items: stretch; margin-top: 22px; }
+  .box { border-radius: 16px; padding: 14px 14px 12px; min-height: 248px; box-sizing: border-box; }
+  .box h2 { margin: 0 0 8px; font-size: 15px; }
+  .box p { margin: 0; font-size: 14px; line-height: 1.45; }
+  .n { font-size: 12px; font-weight: 750; letter-spacing: .04em; text-transform: uppercase; margin-bottom: 6px; }
+  .a { background: #eef4ff; } .b { background: #fff6e8; } .c { background: #f4f6f8; } .d { background: #e9f8ef; }
+  .arrow { display: flex; align-items: center; justify-content: center; color: #627086; font-size: 13px; font-weight: 700; text-align: center; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+  .note { border-radius: 14px; padding: 14px 16px; font-size: 14.5px; line-height: 1.45; }
+  .ok { background: #e8f7ee; } .gap { background: #fff6e8; }
+  .note strong { display: block; margin-bottom: 4px; }
+  .banner { margin-top: 14px; background: #fff1f1; border-radius: 14px; padding: 12px 16px; color: #8d1d1d; font-size: 15px; line-height: 1.45; }
+  .foot { display: flex; justify-content: space-between; margin-top: 12px; color: #6b7787; font-size: 12px; }
+  code { font-family: ui-monospace, monospace; font-size: .92em; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="top">
+      <div>
+        <h1>Grok Figma Bridge — private connection path</h1>
+        <p class="sub">Illustrative diagram, not a screenshot. Grok Bot runs on its own computer. Figma Desktop runs on yours.</p>
+      </div>
+      <div class="badge">Illustrative · not a screenshot</div>
+    </div>
+    <div class="flow">
+      <div class="box a">
+        <div class="n">1 · Grok Bot</div>
+        <h2>Remote HTTP MCP</h2>
+        <p>Use the remote HTTP connector (<code>transport: http</code>) and a bearer header. The local command connector runs on the bot computer, so it cannot open Figma on your computer.</p>
+      </div>
+      <div class="arrow">HTTPS</div>
+      <div class="box b">
+        <div class="n">2 · Your computer</div>
+        <h2>Tailscale Serve</h2>
+        <p>Private tailnet HTTPS only. Proxy to <code>127.0.0.1</code>. Keep Tailscale Funnel off. Placeholder host: <code>YOUR_DEVICE.YOUR_TAILNET.ts.net</code>.</p>
+      </div>
+      <div class="arrow">loopback</div>
+      <div class="box c">
+        <div class="n">3 · This package</div>
+        <h2>New HTTP gateway</h2>
+        <p>Authenticated Streamable HTTP MCP on <code>127.0.0.1</code>, one persistent stdio child. A new helper using the public MCP SDK. Not the original private script.</p>
+      </div>
+      <div class="arrow">stdio</div>
+      <div class="box d">
+        <div class="n">4 · Figma Desktop</div>
+        <h2>Plugin panel</h2>
+        <p>Hardened <code>figma-unified-mcp</code> binds WebSocket <code>18211</code> to <code>127.0.0.1</code>. Keep the panel and file open, green Connected.</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="note ok"><strong>Separate historical check, 2026-11-25</strong>An existing Grok Bot setup read a canvas, created a temporary rectangle, read it back, and deleted it. 106 tools, no Figma REST token. That setup is not this helper.</div>
+      <div class="note gap"><strong>What this package actually checks</strong>Mock-subprocess tests cover auth, initialize, tools/list, tools/call, one backend, and cleanup. A clean colleague computer was not end-to-end tested.</div>
+    </div>
+    <div class="banner"><strong>Keep the panel open.</strong> Open <code>figma-unified-mcp</code> inside the target Figma Desktop file and confirm green Connected before any canvas action. Switching apps is fine. If it disconnects, reconnect before retrying.</div>
+    <div class="foot"><span>Upstream: github.com/sso-ss/figma-unified-mcp (MIT)</span><span>Grok Figma Bridge Skill · illustrative diagram</span></div>
+  </div>
+</body>
+</html>

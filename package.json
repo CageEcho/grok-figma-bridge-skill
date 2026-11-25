@@ -1,0 +1,27 @@
+{
+  "name": "grok-figma-bridge-skill",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Skill and local helper for a private Tailscale Serve path from Grok Bot to one loopback-hardened figma-unified-mcp backend.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "check": "node --check src/*.mjs && node --check scripts/*.mjs && node --check test/*.test.mjs && node --check test/fixtures/*.mjs",
+    "test": "node --test --test-concurrency=1 test/*.test.mjs",
+    "gateway": "node src/gateway.mjs",
+    "setup": "node scripts/setup.mjs",
+    "fetch-upstream": "node scripts/fetch-upstream.mjs",
+    "serve": "node scripts/enable-tailscale-serve.mjs",
+    "stop": "node scripts/stop-gateway.mjs",
+    "privacy-scan": "node scripts/privacy-scan.mjs",
+    "package": "node scripts/package-skill.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/client": "2.4.0",
+    "@modelcontextprotocol/node": "2.1.2",
+    "@modelcontextprotocol/server": "2.4.0"
+  }
+}

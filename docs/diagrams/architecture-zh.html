@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<title>架构示意图</title>
+<style>
+  html, body { margin: 0; width: 1280px; height: 900px; background: #eef2f6; color: #172033; font-family: "WenQuanYi Micro Hei", "Segoe UI", sans-serif; }
+  .card { margin: 28px; height: 844px; background: #fff; border-radius: 22px; box-shadow: 0 10px 30px rgba(23, 32, 51, .06); padding: 28px 32px 18px; box-sizing: border-box; }
+  .top { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; }
+  h1 { font-size: 28px; line-height: 1.3; margin: 0 0 8px; }
+  .badge { background: #fff4df; color: #8a5a00; border-radius: 999px; padding: 8px 12px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+  .sub { margin: 0; color: #526072; font-size: 16px; max-width: 860px; }
+  .flow { display: grid; grid-template-columns: 1fr 70px 1fr 70px 1fr 70px 1fr; gap: 8px; align-items: stretch; margin-top: 22px; }
+  .box { border-radius: 16px; padding: 14px 14px 12px; min-height: 248px; box-sizing: border-box; }
+  .box h2 { margin: 0 0 8px; font-size: 16px; }
+  .box p { margin: 0; font-size: 14.5px; line-height: 1.5; }
+  .n { font-size: 12px; font-weight: 750; letter-spacing: .04em; margin-bottom: 6px; }
+  .a { background: #eef4ff; } .b { background: #fff6e8; } .c { background: #f4f6f8; } .d { background: #e9f8ef; }
+  .arrow { display: flex; align-items: center; justify-content: center; color: #627086; font-size: 13px; font-weight: 700; text-align: center; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+  .note { border-radius: 14px; padding: 14px 16px; font-size: 15px; line-height: 1.5; }
+  .ok { background: #e8f7ee; } .gap { background: #fff6e8; }
+  .note strong { display: block; margin-bottom: 4px; }
+  .banner { margin-top: 14px; background: #fff1f1; border-radius: 14px; padding: 12px 16px; color: #8d1d1d; font-size: 15.5px; line-height: 1.5; }
+  .foot { display: flex; justify-content: space-between; margin-top: 12px; color: #6b7787; font-size: 12px; }
+  code { font-family: ui-monospace, monospace; font-size: .92em; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="top">
+      <div>
+        <h1>Grok Figma Bridge — 私网连接路径</h1>
+        <p class="sub">原创示意图，不是截图。Grok Bot 在自己的电脑上运行，Figma Desktop 在你的电脑上运行。</p>
+      </div>
+      <div class="badge">示意图 · 不是截图</div>
+    </div>
+    <div class="flow">
+      <div class="box a">
+        <div class="n">1 · Grok Bot</div>
+        <h2>远程 HTTP MCP</h2>
+        <p>使用远程 HTTP 连接器（<code>transport: http</code>）和 Bearer 请求头。本地命令连接器跑在 Bot 自己的电脑上，到不了你电脑里的 Figma。</p>
+      </div>
+      <div class="arrow">HTTPS</div>
+      <div class="box b">
+        <div class="n">2 · 你的电脑</div>
+        <h2>Tailscale Serve</h2>
+        <p>只走 tailnet 内的私有 HTTPS，反代到 <code>127.0.0.1</code>。不要打开 Funnel。占位主机名：<code>YOUR_DEVICE.YOUR_TAILNET.ts.net</code>。</p>
+      </div>
+      <div class="arrow">回环</div>
+      <div class="box c">
+        <div class="n">3 · 本包</div>
+        <h2>新的 HTTP 网关</h2>
+        <p><code>127.0.0.1</code> 上的鉴权 Streamable HTTP MCP，只拉起一个常驻 stdio 子进程。这是基于公开 MCP SDK 的新助手，不是原来的私有脚本。</p>
+      </div>
+      <div class="arrow">stdio</div>
+      <div class="box d">
+        <div class="n">4 · Figma Desktop</div>
+        <h2>插件面板</h2>
+        <p>加固后的 <code>figma-unified-mcp</code> 把 WebSocket <code>18211</code> 绑在 <code>127.0.0.1</code>。面板和文件保持打开，并显示绿色 Connected。</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="note ok"><strong>另一次历史验收，2026-11-25</strong>当时已有的 Grok Bot 设置完成了画布读取、临时矩形创建、读回和删除。106 个工具，没有 Figma REST token。那次设置不是这个新助手。</div>
+      <div class="note gap"><strong>本包实际做过的检查</strong>用模拟 stdio 子进程测试了鉴权、initialize、tools/list、tools/call、单一后端和清理。没有在一台干净的同事电脑上做端到端测试。</div>
+    </div>
+    <div class="banner"><strong>面板保持打开。</strong> 在目标 Figma Desktop 文件里打开 <code>figma-unified-mcp</code>，确认绿色 Connected 后再操作画布。可以切换到其他应用。断开后先重连，再重试。</div>
+    <div class="foot"><span>上游：github.com/sso-ss/figma-unified-mcp（MIT）</span><span>Grok Figma Bridge Skill · 示意图</span></div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Setup diagram</title>
+<style>
+  html, body { margin: 0; width: 1280px; height: 860px; background: #eef2f6; color: #172033; font-family: "Segoe UI", "Helvetica Neue", sans-serif; }
+  .card { margin: 28px; height: 804px; background: #fff; border-radius: 22px; box-shadow: 0 10px 30px rgba(23, 32, 51, .06); padding: 26px 30px 16px; box-sizing: border-box; }
+  .top { display: flex; justify-content: space-between; gap: 16px; }
+  h1 { font-size: 28px; margin: 0 0 6px; }
+  .badge { background: #fff4df; color: #8a5a00; border-radius: 999px; padding: 8px 12px; font-size: 13px; font-weight: 700; white-space: nowrap; }
+  .sub { margin: 0; color: #526072; font-size: 16px; }
+  .steps { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin-top: 20px; }
+  .step { background: #f6f8fb; border-radius: 16px; padding: 14px; min-height: 230px; box-sizing: border-box; }
+  .num { width: 28px; height: 28px; border-radius: 50%; background: #172033; color: white; display: flex; align-items: center; justify-content: center; font-weight: 700; margin-bottom: 8px; }
+  h2 { font-size: 16px; margin: 0 0 8px; }
+  p { margin: 0; font-size: 14px; line-height: 1.45; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 16px; }
+  .note { border-radius: 14px; padding: 14px 16px; font-size: 14.5px; line-height: 1.45; }
+  .ok { background: #e8f7ee; } .stop { background: #fff1f1; }
+  .note strong { display: block; margin-bottom: 4px; }
+  .foot { display: flex; justify-content: space-between; margin-top: 14px; color: #6b7787; font-size: 12px; }
+  code { font-family: ui-monospace, monospace; font-size: .92em; }
+</style>
+</head>
+<body>
+  <div class="card">
+    <div class="top">
+      <div>
+        <h1>Shortest setup on your computer</h1>
+        <p class="sub">Workflow diagram, not a screenshot. A clean colleague install has not been end-to-end tested.</p>
+      </div>
+      <div class="badge">Workflow diagram · not a screenshot</div>
+    </div>
+    <div class="steps">
+      <div class="step"><div class="num">1</div><h2>Pin and patch</h2><p><code>fetch-upstream.mjs</code> checks out one commit, requires the known WebSocket line, sets host <code>127.0.0.1</code>, and fails closed on mismatch.</p></div>
+      <div class="step"><div class="num">2</div><h2>Private token file</h2><p><code>setup.mjs</code> writes mode 0600 settings and does not print the bearer token. Start one gateway. It owns the stdio backend.</p></div>
+      <div class="step"><div class="num">3</div><h2>Private HTTPS</h2><p><code>tailscale serve</code> to <code>127.0.0.1</code> only. Funnel stays off. In Grok Bot, authenticate Tailscale, then add the remote HTTP connector.</p></div>
+      <div class="step"><div class="num">4</div><h2>Open the panel</h2><p>Figma Desktop, not the browser. Import <code>figma-plugin/manifest.json</code>. Leave <code>figma-unified-mcp</code> green Connected.</p></div>
+      <div class="step"><div class="num">5</div><h2>Blank file only</h2><p>Check status, read once, then one temporary node if you explicitly agree. Delete it. Do not start on a real design file.</p></div>
+    </div>
+    <div class="row">
+      <div class="note ok"><strong>Operational rules</strong>Only one backend may hold port 18211. If it is busy, the gateway prints that PID and stops. It does not run a broad kill. You can switch apps while the panel and file stay open.</div>
+      <div class="note stop"><strong>Stop conditions</strong>Do not use the bot-local command connector, Tailscale Funnel, Figma Web, or a Figma REST token in chat. Permission errors and a disconnected panel stop the work.</div>
+    </div>
+    <div class="foot"><span>Gateway tests use a mock subprocess. They do not call Figma.</span><span>Grok Figma Bridge Skill · illustrative diagram</span></div>
+  </div>
+</body>
+</html>
