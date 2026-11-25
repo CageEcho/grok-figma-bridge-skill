@@ -1,0 +1,16 @@
+{
+  "repository": "https://github.com/sso-ss/figma-unified-mcp.git",
+  "commit": "1f089393e73da8a5955bd48b973b3af2ac7def28",
+  "packageName": "figma-unified-mcp",
+  "packageVersion": "0.1.0",
+  "nodeEngine": ">=18.0.0",
+  "license": "MIT",
+  "sourceFile": "src/transport/plugin-bridge.ts",
+  "unpatchedSha256": "f3af736193f2a91fe87701dc70f511856dfcf27196b6c5e0848bf581c1062ea6",
+  "patchedSha256": "9556e1adb206daead67a7f5b3dd38c299207ade4fd655d104d0ee66d33ad3cad",
+  "unpatchedLine": "        this.wss = new WebSocketServer({ port: this.port });",
+  "patchedLine": "        this.wss = new WebSocketServer({ port: this.port, host: \"127.0.0.1\" });",
+  "entry": "dist/server.js",
+  "pluginManifest": "figma-plugin/manifest.json",
+  "wsPort": 18211
+}
